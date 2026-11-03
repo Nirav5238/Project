@@ -1,3 +1,7 @@
 Flask==3.0.3
 Flask-SQLAlchemy==3.1.1
+<<<<<<< HEAD
 gunicorn==22.0.0
+=======
+gunicorn
+>>>>>>> 8d00d03d82840c2371e0767cdf17d82b0bc6c845
