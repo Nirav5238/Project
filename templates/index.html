@@ -59,4 +59,106 @@
         </a>
     </div>
 </div>
+<div class="card">
+    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-list"></i> Active Work Orders</span>
+    </div>
+    <div class="card-body">
+        <!-- Filter Row Elements -->
+        <div class="row g-2 mb-3">
+            <div class="col-md-2">
+                <input type="text" id="filterWO" class="form-control form-control-sm" placeholder="Filter WO #...">
+            </div>
+            <div class="col-md-2">
+                <input type="text" id="filterCompany" class="form-control form-control-sm" placeholder="Filter Company...">
+            </div>
+            <div class="col-md-2">
+                <input type="text" id="filterSite" class="form-control form-control-sm" placeholder="Filter Site...">
+            </div>
+            <div class="col-md-2">
+                <input type="text" id="filterEquipment" class="form-control form-control-sm" placeholder="Filter Equipment...">
+            </div>
+            <div class="col-md-2">
+                <select id="filterStatus" class="form-select form-select-sm">
+                    <option value="">All Statuses</option>
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="CLOSED">CLOSED</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Your Existing Table Layout -->
+        <div class="table-responsive">
+            <table class="table align-middle" id="workOrdersTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>WO #</th>
+                        <th>Company</th>
+                        <th>Site Address</th>
+                        <th>Equipment</th>
+                        <th>Period</th>
+                        <th>Rate</th>
+                        <th>Total ₹</th>
+                        <th>Days</th>
+                        <th>Logs</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Your jinja2 loop: {% for wo in work_orders %} -->
+                    <tr class="wo-row">
+                        <td class="wo-num">01</td>
+                        <td class="wo-company">Himani&Co.</td>
+                        <td class="wo-site">Karelibaug</td>
+                        <td class="wo-equipment"><span class="badge bg-success">GJ06CQ5821HER200840</span></td>
+                        <td>20/03/2026</td>
+                        <td>₹250.00</td>
+                        <td>₹104000</td>
+                        <td>26</td>
+                        <td><span class="badge bg-success">2 LOGS</span></td>
+                        <td class="wo-status"><span class="badge bg-danger">CLOSED</span></td>
+                        <td>...buttons...</td>
+                    </tr>
+                    <!-- {% endfor %} -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Simple JavaScript Filter Script -->
+<script>
+document.querySelectorAll('[id^="filter"]').forEach(filterInput => {
+    filterInput.addEventListener('input', filterTable);
+    filterInput.addEventListener('change', filterTable);
+});
+
+function filterTable() {
+    const valWO = document.getElementById('filterWO').value.toLowerCase();
+    const valCompany = document.getElementById('filterCompany').value.toLowerCase();
+    const valSite = document.getElementById('filterSite').value.toLowerCase();
+    const valEquipment = document.getElementById('filterEquipment').value.toLowerCase();
+    const valStatus = document.getElementById('filterStatus').value.toUpperCase();
+
+    const rows = document.querySelectorAll('#workOrdersTable tbody .wo-row');
+    
+    rows.forEach(row => {
+        const txtWO = row.querySelector('.wo-num')?.textContent.toLowerCase() || '';
+        const txtCompany = row.querySelector('.wo-company')?.textContent.toLowerCase() || '';
+        const txtSite = row.querySelector('.wo-site')?.textContent.toLowerCase() || '';
+        const txtEquipment = row.querySelector('.wo-equipment')?.textContent.toLowerCase() || '';
+        const txtStatus = row.querySelector('.wo-status')?.textContent.toUpperCase() || '';
+
+        const matches = txtWO.includes(valWO) &&
+                        txtCompany.includes(valCompany) &&
+                        txtSite.includes(valSite) &&
+                        txtEquipment.includes(valEquipment) &&
+                        (valStatus === '' || txtStatus.includes(valStatus));
+
+        row.style.display = matches ? '' : 'none';
+    });
+}
+</script>
+
 {% endblock %}

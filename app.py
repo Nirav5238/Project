@@ -252,6 +252,30 @@ def workorders():
     eqs = Equipment.query.all()
     return render_template('workorders.html', workorders=wos, equipment=eqs, current_date=current_date, logs=Logsheet.query.all())
 
+@app.route('/work-orders')
+def work_orders_view():
+    # Capture user input parameters from search/filter bar
+    search_wo = request.args.get('filter_wo', '')
+    search_company = request.args.get('filter_company', '')
+    search_status = request.args.get('filter_status', '')
+
+    # Build dynamically filtered database queries
+    query = WorkOrder.query
+
+    if search_wo:
+        query = query.filter(WorkOrder.wo_number.like(f"%{search_wo}%"))
+    if search_company:
+        query = query.filter(WorkOrder.company_name.like(f"%{search_company}%"))
+    if search_status:
+        query = query.filter(WorkOrder.status == search_status)
+
+    active_work_orders = query.all()
+    return render_template('workorders.html', work_orders=active_work_orders)
+
+
+
+
+
 @app.route('/logsheets', methods=['GET', 'POST'])
 @login_required
 def logsheets():
